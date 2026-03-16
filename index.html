@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Tesseract</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="topbar">
+      <div class="brandwrap compact-brand vertical-brand">
+        <img class="brandlogo" src="tesseract_logo.svg" alt="Tesseract logo" />
+        <div class="brandstack solo-sub under-logo">
+          <div class="brandsub always-show">Fold engine for packaging prototypes</div>
+        </div>
+      </div>
+      <a id="maker-link" class="maker-link header-maker" href="https://www.linkedin.com/in/gerardocalambasp/" target="_blank" rel="noopener noreferrer" title="LinkedIn · tatto_posada">
+        <span>iterated by: tatto_posada</span>
+        <img class="linkedin-icon" src="linkedin_logo.svg" alt="LinkedIn" />
+      </a>
+    </div>
+
+    <div id="status-area" class="status">Ready</div>
+
+    <section id="import-view">
+      <div class="btnrow import-actions">
+        <button id="test-btn" class="btn secondary">Test Connection</button>
+        <button id="extract-btn" class="btn primary">Extract Dieline</button>
+        <button id="preview-btn" class="btn ghost-hidden" aria-hidden="true" tabindex="-1">Preview 2D</button>
+        <button id="continue-3d-btn" class="btn primary" disabled>Continue to 3D</button>
+      </div>
+
+      <div class="import-grid compact-import-grid">
+        <div class="card import-card compact-status-card">
+          <div class="cardhead">
+            <div class="cardtitle">Check for import</div>
+            <label class="toggle debug-toggle-inline">
+              <input id="debug-toggle" type="checkbox" />
+              <span>Debug</span>
+            </label>
+          </div>
+          <div id="validation-status" class="check-status">Waiting for extraction...</div>
+          <ul id="problems-list" class="problems"></ul>
+        </div>
+
+        <div class="card preview-card compact-preview-card">
+          <div class="cardhead no-margin">
+            <div class="cardtitle">Dieline preview</div>
+          </div>
+          <canvas id="preview-canvas" width="360" height="220" class="canvas import-canvas"></canvas>
+        </div>
+      </div>
+
+      <textarea id="output-json" readonly class="json hidden-debug" placeholder="JSON Output (Debug)..."></textarea>
+    </section>
+
+    <section id="three-view" style="display:none;">
+      <div class="btnrow btnrow2 actionbar">
+        <button id="back-btn" class="btn secondary">Back</button>
+        <button id="export-3d-btn" class="btn ghost-hidden" aria-hidden="true" tabindex="-1">Export 3D PNG</button>
+        <button id="export-glb-btn" class="btn primary">Export GLB</button>
+      </div>
+
+      <div class="tabshell">
+        <div class="tooltabs" role="tablist" aria-label="Tesseract controls">
+          <button class="tooltab active" id="tab-btn-material" data-tab="material" role="tab" aria-selected="true">Material</button>
+          <button class="tooltab" id="tab-btn-artwork" data-tab="artwork" role="tab" aria-selected="false">Artwork</button>
+          <button class="tooltab" id="tab-btn-creases" data-tab="creases" role="tab" aria-selected="false">Creases</button>
+          <button class="tooltab" id="tab-btn-debug" data-tab="debug" role="tab" aria-selected="false">Debug</button>
+        </div>
+
+        <div class="tabpanelwrap">
+          <div id="tab-material" class="tabpanel active" role="tabpanel" aria-labelledby="tab-btn-material">
+            <div id="material-card" class="card slimcard tabcard no-bottom-gap">
+              <div class="cardhead">
+                <div class="cardtitle">Material</div>
+                <div id="material-pill" class="meta-pill">White board</div>
+              </div>
+              <div class="formrow compact-formrow">
+                <label for="material-preset">Stock</label>
+                <select id="material-preset" class="selectinput">
+                  <option value="white">White</option>
+                  <option value="kraft">Kraft</option>
+                  <option value="gray">Gray</option>
+                </select>
+                <label for="thickness-input">Thickness (mm)</label>
+                <input id="thickness-input" class="numinput" type="number" min="0.1" max="20" step="0.05" value="0.25" />
+                <button id="apply-thickness-btn" class="btn secondary">Apply</button>
+              </div>
+              <div class="smallnote">Stock affects cantos, fold bridge and inner thickness faces.</div>
+            </div>
+          </div>
+
+          <div id="tab-artwork" class="tabpanel" role="tabpanel" aria-labelledby="tab-btn-artwork">
+            <div id="art-card" class="card slimcard tabcard no-bottom-gap">
+              <div class="cardhead">
+                <div class="cardtitle">Artwork</div>
+                <div id="art-source-pill" class="meta-pill">No art</div>
+              </div>
+              <div class="formrow compact-formrow">
+                <button id="refresh-art-btn" class="btn secondary">Refresh Artwork</button>
+              </div>
+              <div id="art-status" class="smallnote">Looks for Front/Back or Tiro/Retiro as artboards or layers. Mapping is aligned to the full artboard.</div>
+            </div>
+          </div>
+
+          <div id="tab-creases" class="tabpanel" role="tabpanel" aria-labelledby="tab-btn-creases">
+            <div id="interaction-card" class="card slimcard tabcard no-bottom-gap">
+              <div class="cardhead">
+                <div class="cardtitle">Creases</div>
+                <div id="interaction-mode-pill" class="meta-pill accent-pill">Crease selection</div>
+              </div>
+              <div id="interaction-status" class="smallnote">Alt/Option + click a red fold line to target a crease. Shift + click any panel to change the base.</div>
+            </div>
+            <div id="crease-controls-slot"></div>
+          </div>
+
+          <div id="tab-debug" class="tabpanel" role="tabpanel" aria-labelledby="tab-btn-debug">
+            <details id="debug-details" class="debug-details">
+              <summary>Debug técnico</summary>
+              <pre id="log-area" class="log"></pre>
+            </details>
+          </div>
+        </div>
+      </div>
+
+      <div id="three-viewport" class="viewport">
+        <div id="viewport-badge" class="viewport-badge">Alt/Option + click red line · Shift + click panel for base</div>
+        <canvas id="preview-3d" width="360" height="380" class="canvas"></canvas>
+      </div>
+      <div class="hint">Left-drag: orbit · Right-drag: pan · Wheel: zoom</div>
+    </section>
+
+    <div id="error-msg" class="error" style="display:none;">
+      CEP Bridge (window.__adobe_cep__) not found. This panel must run inside Adobe Illustrator.
+    </div>
+  </div>
+
+  <script src="libs/three.min.js"></script>
+  <script src="libs/OrbitControls.js"></script>
+  
+  <script src="main.js"></script>
+  <script>
+    (function(){
+      var link = document.getElementById('maker-link');
+      if(!link) return;
+      function openExternal(url){
+        try{
+          if(window.cep && window.cep.util && typeof window.cep.util.openURLInDefaultBrowser === 'function'){
+            window.cep.util.openURLInDefaultBrowser(url);
+            return true;
+          }
+        }catch(e){}
+        try{
+          if(window.__adobe_cep__ && typeof window.__adobe_cep__.openURLInDefaultBrowser === 'function'){
+            window.__adobe_cep__.openURLInDefaultBrowser(url);
+            return true;
+          }
+        }catch(e){}
+        try{
+          window.open(url, '_blank');
+          return true;
+        }catch(e){}
+        return false;
+      }
+      link.addEventListener('click', function(ev){
+        ev.preventDefault();
+        ev.stopPropagation();
+        openExternal(link.getAttribute('href'));
+      });
+    })();
+  </script>
+</body>
+</html>

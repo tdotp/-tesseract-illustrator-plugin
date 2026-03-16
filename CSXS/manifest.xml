@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ExtensionManifest Version="12.0" ExtensionBundleId="com.tato.tesseract" ExtensionBundleVersion="0.1.0"
+    ExtensionBundleName="Tesseract" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <ExtensionList>
+    <Extension Id="com.tato.tesseract.panel" Version="0.1.0" />
+  </ExtensionList>
+  <ExecutionEnvironment>
+    <HostList>
+      <Host Name="ILST" Version="[0.0,99.9]" />
+    </HostList>
+    <LocaleList>
+      <Locale Code="All" />
+    </LocaleList>
+    <RequiredRuntimeList>
+      <RequiredRuntime Name="CSXS" Version="12.0" />
+    </RequiredRuntimeList>
+  </ExecutionEnvironment>
+  <DispatchInfoList>
+    <Extension Id="com.tato.tesseract.panel">
+      <DispatchInfo>
+        <Resources>
+          <MainPath>./index.html</MainPath>
+        </Resources>
+        <Lifecycle>
+          <AutoVisible>true</AutoVisible>
+        </Lifecycle>
+        <UI>
+          <Type>Panel</Type>
+          <Resizeable>true</Resizeable>
+          <Menu>Tesseract</Menu>
+          <Geometry>
+            <Size>
+              <Height>640</Height>
+              <Width>480</Width>
+            </Size>
+            <MinSize>
+              <Height>560</Height>
+              <Width>400</Width>
+            </MinSize>
+          </Geometry>
+          <Icons>
+            <Icon Type="Normal">./icons/icon_normal.png</Icon>
+            <Icon Type="RollOver">./icons/icon_normal.png</Icon>
+            <Icon Type="DarkNormal">./icons/icon_dark.png</Icon>
+            <Icon Type="DarkRollOver">./icons/icon_dark.png</Icon>
+            <Icon Type="Normal@2X">./icons/icon_normal@2x.png</Icon>
+            <Icon Type="RollOver@2X">./icons/icon_normal@2x.png</Icon>
+            <Icon Type="DarkNormal@2X">./icons/icon_dark@2x.png</Icon>
+            <Icon Type="DarkRollOver@2X">./icons/icon_dark@2x.png</Icon>
+          </Icons>
+        </UI>
+      </DispatchInfo>
+    </Extension>
+  </DispatchInfoList>
+</ExtensionManifest>
