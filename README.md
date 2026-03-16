@@ -5,6 +5,16 @@ CEP plugin para Adobe Illustrator enfocado en prototipos de packaging: extracci�
 **Tagline:** Fold engine for packaging prototypes  
 **Iterated by:** [tatto_posada](https://www.linkedin.com/in/gerardocalambasp/)
 
+## Status
+
+Versión funcional / release candidate orientada a:
+- validación interna
+- iteración de UX
+- pruebas de export GLB
+- prototipado de empaques
+
+---
+
 ## Qué hace
 
 - Lee capas de troquel y pliegue desde Illustrator.
